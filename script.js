@@ -146,6 +146,73 @@ function renderCharacters() {
     showCharactersInfo.innerHTML = "";
     charactersActionButton.textContent = "Show Characters";
     charactersActionButton.style.backgroundColor = "#a9e984";
+    const radios = document.querySelectorAll(".homeworldRadio");
+    radios.forEach((radio) => (radio.checked = false));
   }
   renderStatus = !renderStatus;
 }
+
+// const rawHomeworlds = characters.map(
+//   (character) => character.homeworld ?? "other"
+// );
+// console.log(rawHomeworlds);
+
+// /*like excel - merge repeating homeworlds*/
+// const homeworldsObject = {};
+
+// rawHomeworlds.forEach((homeworld) => {
+//   homeworldsObject[homeworld] = true;
+// });
+
+// const uniqueHomeworlds = Object.keys(homeworldsObject);
+// console.log(homeworldsObject);
+// console.log(uniqueHomeworlds);
+
+const homeworlds = [
+  ...new Set(
+    characters.map((character) =>
+      (character.homeworld ?? "other").toLowerCase()
+    )
+  ),
+];
+
+const radioButtonContainer = document.querySelector(".radioButtonContainer");
+radioButtonContainer.innerHTML = homeworlds
+  .map(
+    (homeworld) =>
+      `
+<div class="form-check text-white">
+  <input class="form-check-input homeworldRadio" type="radio" name="homeworld" id="homeworld-${homeworld}" value="${homeworld}">
+  <label class="form-check-label" for="homeworld-${homeworld}">${homeworld}</label>
+</div>
+`
+  )
+  .join("");
+
+radioButtonContainer.addEventListener("change", function (event) {
+  if (event.target.classList.contains("form-check-input")) {
+    const selectedHomeworld = event.target.value;
+    const selectedHomeworldsCharacters = characters.filter((character) => {
+      const homeworld = character.homeworld
+        ? character.homeworld.toLowerCase()
+        : "other";
+      return homeworld === selectedHomeworld;
+    });
+    const row = document.querySelector(".row");
+    row.innerHTML = selectedHomeworldsCharacters
+      .map((character) => {
+        return `
+        <div class="col-lg-3 col-md-6 col-sm-12 card">
+        <img src="${character.pic}">
+        <h2 class="card-title">${character.name}</h2>
+        <p class="card-text">Memleket: ${character.homeworld || "Unknown"}</p>
+        </div>
+        
+        `;
+      })
+      .join("");
+    charactersActionButton.textContent = "Hide Characters";
+    charactersActionButton.style.backgroundColor = "#e293ab";
+  }
+  renderStatus = false;
+});

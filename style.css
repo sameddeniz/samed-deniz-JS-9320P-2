@@ -39,3 +39,15 @@
   margin-top: 5%;
   margin-bottom: 5%;
 }
+
+.radioButtonContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin-bottom: 5%;
+  border: solid white 3px;
+  border-radius: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
